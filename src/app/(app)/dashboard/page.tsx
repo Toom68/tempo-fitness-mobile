@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Dumbbell, Flame, Calendar, Plus, Clock, Target } from "lucide-react";
 import Link from "next/link";
 import { formatDate, formatDuration } from "@/lib/utils";
+import { RepeatWorkoutButton } from "@/components/workout/repeat-workout-button";
 
 export default async function DashboardPage() {
   const supabase = await createClient();
@@ -88,11 +89,16 @@ export default async function DashboardPage() {
           <h1 className="truncate text-xl font-bold md:text-2xl">Welcome back{profile?.display_name ? `, ${profile.display_name}` : ""}</h1>
           <p className="text-sm text-muted-foreground">Let&apos;s check your progress</p>
         </div>
-        <Link href="/workouts/new" className="shrink-0">
-          <Button className="gap-2" size="sm">
-            <Plus className="h-4 w-4" /> <span className="hidden sm:inline">New Workout</span><span className="sm:hidden">New</span>
-          </Button>
-        </Link>
+        <div className="flex items-center gap-2 shrink-0">
+          {recentWorkouts && recentWorkouts.length > 0 && (
+            <RepeatWorkoutButton workoutId={recentWorkouts[0].id} />
+          )}
+          <Link href="/workouts/new">
+            <Button className="gap-2" size="sm">
+              <Plus className="h-4 w-4" /> <span className="hidden sm:inline">New Workout</span><span className="sm:hidden">New</span>
+            </Button>
+          </Link>
+        </div>
       </div>
 
       <div className="grid grid-cols-2 gap-3 md:gap-4 lg:grid-cols-4">

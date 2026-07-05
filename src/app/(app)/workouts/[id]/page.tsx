@@ -8,6 +8,7 @@ import { formatDate, formatDuration } from "@/lib/utils";
 import { notFound } from "next/navigation";
 import { DeleteWorkoutButton } from "@/components/workout/delete-workout-button";
 import { BackHeader } from "@/components/shared/back-header";
+import { RepeatWorkoutButton } from "@/components/workout/repeat-workout-button";
 
 export default async function WorkoutDetailPage({
   params,
@@ -51,6 +52,7 @@ export default async function WorkoutDetailPage({
                 <Play className="h-4 w-4" /> <span className="hidden sm:inline">Start Session</span><span className="sm:hidden">Start</span>
               </Button>
             </Link>
+            <RepeatWorkoutButton workoutId={id} />
             <Link href={`/workouts/${id}/edit`}>
               <Button variant="outline" size="icon">
                 <Pencil className="h-4 w-4" />

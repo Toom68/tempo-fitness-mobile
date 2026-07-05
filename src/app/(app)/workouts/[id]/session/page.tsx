@@ -9,6 +9,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { ArrowLeft, Check, Timer, Pause, Play, SkipForward, X, Dumbbell, Trophy } from "lucide-react";
 import { formatDuration } from "@/lib/utils";
+import { Native } from "@/lib/native";
 
 interface WorkoutSet {
   id: string;
@@ -43,6 +44,7 @@ export default function SessionPage() {
   const [restInitial, setRestInitial] = useState(90);
   const [completedSets, setCompletedSets] = useState<Set<string>>(new Set());
   const [finishing, setFinishing] = useState(false);
+  const [prs, setPrs] = useState<string[]>([]);
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const restIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
@@ -105,8 +107,13 @@ export default function SessionPage() {
   const toggleSet = useCallback((setId: string) => {
     setCompletedSets((prev) => {
       const next = new Set(prev);
-      if (next.has(setId)) next.delete(setId);
-      else next.add(setId);
+      if (next.has(setId)) {
+        next.delete(setId);
+        Native.haptics.impact("light");
+      } else {
+        next.add(setId);
+        Native.haptics.impact("medium");
+      }
       return next;
     });
   }, []);
@@ -128,10 +135,35 @@ export default function SessionPage() {
 
   async function handleFinish() {
     setFinishing(true);
+    Native.haptics.notification();
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) return;
 
+    const newPrs: string[] = [];
+
     for (const ex of exercises) {
+      // Find the max weight logged in this session for this exercise
+      const sessionMax = ex.workout_sets
+        .filter((ws) => completedSets.has(ws.id) && ws.weight > 0)
+        .reduce((max, ws) => Math.max(max, ws.weight), 0);
+
+      if (sessionMax > 0) {
+        // Check historical max weight for this exercise (excluding this workout)
+        const { data: prevSets } = await supabase
+          .from("workout_sets")
+          .select("weight, workout_exercises!inner(workout_id, exercise_id, workouts!inner(completed))")
+          .eq("workout_exercises.exercise_id", ex.exercise.id)
+          .neq("workout_exercises.workout_id", params.id)
+          .eq("workout_exercises.workouts.completed", true)
+          .order("weight", { ascending: false })
+          .limit(1);
+
+        const prevMax = prevSets?.[0]?.weight ?? 0;
+        if (sessionMax > prevMax && ex.exercise?.name) {
+          newPrs.push(ex.exercise.name);
+        }
+      }
+
       for (const ws of ex.workout_sets) {
         const completed = completedSets.has(ws.id);
         await supabase
@@ -146,8 +178,17 @@ export default function SessionPage() {
       .update({ completed: true, duration: elapsed })
       .eq("id", params.id);
 
-    router.push(`/workouts/${params.id}`);
-    router.refresh();
+    if (newPrs.length > 0) {
+      Native.haptics.impact("heavy");
+      setPrs(newPrs);
+      setTimeout(() => {
+        router.push(`/workouts/${params.id}`);
+        router.refresh();
+      }, 2200);
+    } else {
+      router.push(`/workouts/${params.id}`);
+      router.refresh();
+    }
   }
 
   if (!loaded) {
@@ -162,6 +203,20 @@ export default function SessionPage() {
 
   return (
     <div className="space-y-4 pb-24">
+      {/* PR celebration overlay */}
+      {prs.length > 0 && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-background/90 backdrop-blur-sm">
+          <div className="flex flex-col items-center gap-4 text-center px-6">
+            <div className="text-6xl">🏆</div>
+            <h2 className="text-2xl font-bold text-primary">New Personal Record!</h2>
+            <p className="text-muted-foreground">
+              {prs.length === 1
+                ? `You hit a new PR on ${prs[0]}!`
+                : `New PRs on: ${prs.join(", ")}!`}
+            </p>
+          </div>
+        </div>
+      )}
       {/* Header with timer */}
       <div className="safe-top sticky top-0 z-20 -mx-4 border-b bg-background/95 px-4 py-3 backdrop-blur md:static md:top-0 md:mx-0 md:rounded-lg md:border">
         <div className="flex items-center justify-between gap-4">

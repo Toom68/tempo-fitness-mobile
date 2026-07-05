@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { Dumbbell, LayoutDashboard, Dumbbell as Workout, BookOpen, Users, Settings, LogOut } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { cn } from "@/lib/utils";
+import { Native } from "@/lib/native";
 
 const navItems = [
   { href: "/dashboard", label: "Home", icon: LayoutDashboard },
@@ -67,6 +68,7 @@ export function AppNav() {
             <Link
               key={item.href}
               href={item.href}
+              onClick={() => Native.haptics.impact("light")}
               className={cn(
                 "flex flex-1 flex-col items-center gap-0.5 pt-2 pb-1.5 text-[10px] font-medium transition-colors active:scale-95",
                 active ? "text-primary" : "text-muted-foreground"

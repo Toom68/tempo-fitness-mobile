@@ -4,6 +4,7 @@ import "./globals.css";
 import { SupabaseProvider } from "@/components/providers/supabase-provider";
 import { QueryProvider } from "@/components/providers/query-provider";
 import { ServiceWorkerRegister } from "@/components/providers/sw-register";
+import { CapacitorInit } from "@/components/providers/capacitor-init";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -53,6 +54,7 @@ export default function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased dark`}
     >
       <body className="min-h-full flex flex-col bg-background text-foreground">
+        <CapacitorInit />
         <ServiceWorkerRegister />
         <QueryProvider>
           <SupabaseProvider>{children}</SupabaseProvider>
