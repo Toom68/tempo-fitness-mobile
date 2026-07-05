@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/button";
@@ -16,7 +15,6 @@ export default function LoginPage() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
-  const router = useRouter();
 
   async function handleLogin(e: React.FormEvent) {
     e.preventDefault();
@@ -29,10 +27,20 @@ export default function LoginPage() {
     if (error) {
       setError(error.message);
       setLoading(false);
-    } else {
-      router.push("/dashboard");
-      router.refresh();
+      return;
     }
+
+    // Confirm the session actually persisted before navigating
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session) {
+      setError("Login succeeded but the session could not be saved. Please try again.");
+      setLoading(false);
+      return;
+    }
+
+    // Full-page navigation: guarantees auth cookies are sent to the server
+    // and bypasses any stale client router cache / service worker state
+    window.location.assign("/dashboard");
   }
 
   return (

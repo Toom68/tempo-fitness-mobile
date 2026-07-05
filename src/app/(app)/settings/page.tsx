@@ -7,8 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
-import { Settings, User, Dumbbell, LogOut, RefreshCw } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { Settings, User, Dumbbell, LogOut, RefreshCw, Trash2 } from "lucide-react";
 import type { Goal, ExperienceLevel, UnitPreference, Equipment } from "@/types";
 
 const goals: { value: Goal; label: string }[] = [
@@ -35,7 +34,6 @@ const equipmentOptions: { value: Equipment; label: string }[] = [
 ];
 
 export default function SettingsPage() {
-  const router = useRouter();
   const supabase = createClient();
 
   const [displayName, setDisplayName] = useState("");
@@ -83,8 +81,7 @@ export default function SettingsPage() {
 
   async function handleLogout() {
     await supabase.auth.signOut();
-    router.push("/login");
-    router.refresh();
+    window.location.assign("/login");
   }
 
   async function handleCheckUpdate() {
@@ -109,6 +106,26 @@ export default function SettingsPage() {
       setUpdateStatus("Could not check for updates right now.");
     } finally {
       setChecking(false);
+    }
+  }
+
+  async function handleClearCache() {
+    setUpdateStatus("Clearing cached data...");
+    try {
+      // Unregister all service workers
+      if ("serviceWorker" in navigator) {
+        const regs = await navigator.serviceWorker.getRegistrations();
+        await Promise.all(regs.map((r) => r.unregister()));
+      }
+      // Delete all Cache Storage entries
+      if ("caches" in window) {
+        const keys = await caches.keys();
+        await Promise.all(keys.map((k) => caches.delete(k)));
+      }
+      setUpdateStatus("Cache cleared. Reloading...");
+      setTimeout(() => window.location.reload(), 500);
+    } catch {
+      setUpdateStatus("Could not clear cache. Try clearing site data in your browser settings.");
     }
   }
 
@@ -239,7 +256,7 @@ export default function SettingsPage() {
       </Card>
 
       <Card>
-        <CardContent className="py-4">
+        <CardContent className="space-y-4 py-4">
           <button
             onClick={handleCheckUpdate}
             disabled={checking}
@@ -247,8 +264,14 @@ export default function SettingsPage() {
           >
             <RefreshCw className={`h-4 w-4 ${checking ? "animate-spin" : ""}`} /> Check for Updates
           </button>
+          <button
+            onClick={handleClearCache}
+            className="flex items-center gap-2 text-sm font-medium text-muted-foreground active:scale-95"
+          >
+            <Trash2 className="h-4 w-4" /> Clear Cache &amp; Reload
+          </button>
           {updateStatus && (
-            <p className="mt-2 text-xs text-muted-foreground">{updateStatus}</p>
+            <p className="text-xs text-muted-foreground">{updateStatus}</p>
           )}
         </CardContent>
       </Card>

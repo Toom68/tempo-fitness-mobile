@@ -1,14 +1,13 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Dumbbell, ArrowLeft } from "lucide-react";
+import { Dumbbell } from "lucide-react";
 import { OAuthButtons } from "@/components/auth/oauth-buttons";
 
 export default function SignupPage() {
@@ -17,7 +16,6 @@ export default function SignupPage() {
   const [username, setUsername] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
-  const router = useRouter();
 
   async function handleSignup(e: React.FormEvent) {
     e.preventDefault();
@@ -40,8 +38,8 @@ export default function SignupPage() {
       // Check if session was created (email confirmation may be required)
       const { data: { session } } = await supabase.auth.getSession();
       if (session) {
-        router.push("/onboarding");
-        router.refresh();
+        // Full-page navigation guarantees cookies reach the server
+        window.location.assign("/onboarding");
       } else {
         setError("Check your email to confirm your account, or sign in with Google/Spotify below.");
         setLoading(false);
@@ -53,9 +51,6 @@ export default function SignupPage() {
     <div className="flex min-h-screen items-center justify-center px-4">
       <Card className="w-full max-w-md">
         <CardHeader className="space-y-3 text-center">
-          <Link href="/" className="mx-auto flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground">
-            <ArrowLeft className="h-4 w-4" /> Back home
-          </Link>
           <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10">
             <Dumbbell className="h-6 w-6 text-primary" />
           </div>

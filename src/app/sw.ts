@@ -12,6 +12,9 @@ declare global {
 
 const ctx = self as unknown as ServiceWorkerGlobalScope;
 
+// Byte-changes the compiled sw.js each build → forces update detection
+const BUILD_ID = process.env.NEXT_PUBLIC_BUILD_ID ?? "dev";
+
 const serwist = new Serwist({
   // @ts-expect-error: self.__SW_MANIFEST is injected by Serwist at build time
   precacheEntries: self.__SW_MANIFEST,
@@ -21,10 +24,13 @@ const serwist = new Serwist({
   runtimeCaching: defaultCache,
 });
 
-// Allow the page to manually trigger skipWaiting
+// Allow the page to manually trigger skipWaiting or query the build version
 ctx.addEventListener("message", (event: ExtendableMessageEvent) => {
   if (event.data?.type === "SKIP_WAITING") {
     ctx.skipWaiting();
+  }
+  if (event.data?.type === "GET_VERSION") {
+    event.ports[0]?.postMessage({ buildId: BUILD_ID });
   }
 });
 
