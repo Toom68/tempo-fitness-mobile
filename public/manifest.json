@@ -1,0 +1,17 @@
+{
+  "name": "Tempo Fitness",
+  "short_name": "Tempo",
+  "description": "100% free, AI-powered, social workout tracker. No paywalls, no ads.",
+  "start_url": "/dashboard",
+  "display": "standalone",
+  "background_color": "#0a0a0a",
+  "theme_color": "#0a0a0a",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}
