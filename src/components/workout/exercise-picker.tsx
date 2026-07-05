@@ -47,29 +47,37 @@ export function ExercisePicker({
 }) {
   const [search, setSearch] = useState("");
   const [showFilters, setShowFilters] = useState(false);
-  const [activeMuscle, setActiveMuscle] = useState<MuscleGroup | null>(null);
-  const [activeEquipment, setActiveEquipment] = useState<Equipment | null>(null);
+  const [activeMuscles, setActiveMuscles] = useState<MuscleGroup[]>([]);
+  const [activeEquipment, setActiveEquipment] = useState<Equipment[]>([]);
   const [effectiveness, setEffectiveness] = useState<"all" | "compound" | "isolation">("all");
 
   const filtered = useMemo(() => {
     if (!exercises) return [];
     return exercises.filter((ex) => {
       if (search && !ex.name.toLowerCase().includes(search.toLowerCase())) return false;
-      if (activeMuscle && ex.muscle_group !== activeMuscle && !ex.secondary_muscles?.includes(activeMuscle)) return false;
-      if (activeEquipment && ex.equipment !== activeEquipment) return false;
+      if (activeMuscles.length > 0 && !activeMuscles.includes(ex.muscle_group) && !ex.secondary_muscles?.some((m) => activeMuscles.includes(m))) return false;
+      if (activeEquipment.length > 0 && !activeEquipment.includes(ex.equipment)) return false;
       if (effectiveness === "compound" && !COMPOUND_MUSCLES.includes(ex.muscle_group)) return false;
       if (effectiveness === "isolation" && !ISOLATION_MUSCLES.includes(ex.muscle_group)) return false;
       return true;
     });
-  }, [exercises, search, activeMuscle, activeEquipment, effectiveness]);
+  }, [exercises, search, activeMuscles, activeEquipment, effectiveness]);
 
   const activeFilterCount =
-    (activeMuscle ? 1 : 0) + (activeEquipment ? 1 : 0) + (effectiveness !== "all" ? 1 : 0);
+    activeMuscles.length + activeEquipment.length + (effectiveness !== "all" ? 1 : 0);
 
   function clearFilters() {
-    setActiveMuscle(null);
-    setActiveEquipment(null);
+    setActiveMuscles([]);
+    setActiveEquipment([]);
     setEffectiveness("all");
+  }
+
+  function toggleMuscle(mg: MuscleGroup) {
+    setActiveMuscles((prev) => prev.includes(mg) ? prev.filter((x) => x !== mg) : [...prev, mg]);
+  }
+
+  function toggleEquipment(eq: Equipment) {
+    setActiveEquipment((prev) => prev.includes(eq) ? prev.filter((x) => x !== eq) : [...prev, eq]);
   }
 
   return (
@@ -118,9 +126,9 @@ export function ExercisePicker({
                 {MUSCLE_GROUPS.map((mg) => (
                   <button
                     key={mg.value}
-                    onClick={() => setActiveMuscle(activeMuscle === mg.value ? null : mg.value)}
+                    onClick={() => toggleMuscle(mg.value)}
                     className={`rounded-md px-2.5 py-1 text-xs font-medium transition-colors ${
-                      activeMuscle === mg.value
+                      activeMuscles.includes(mg.value)
                         ? "bg-primary text-primary-foreground"
                         : "bg-secondary text-secondary-foreground hover:bg-secondary/80"
                     }`}
@@ -137,9 +145,9 @@ export function ExercisePicker({
                 {EQUIPMENT_TYPES.map((eq) => (
                   <button
                     key={eq.value}
-                    onClick={() => setActiveEquipment(activeEquipment === eq.value ? null : eq.value)}
+                    onClick={() => toggleEquipment(eq.value)}
                     className={`rounded-md px-2.5 py-1 text-xs font-medium transition-colors ${
-                      activeEquipment === eq.value
+                      activeEquipment.includes(eq.value)
                         ? "bg-primary text-primary-foreground"
                         : "bg-secondary text-secondary-foreground hover:bg-secondary/80"
                     }`}

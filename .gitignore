@@ -40,3 +40,12 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# serwist build artifact
+public/sw.js
+public/swe-worker-*.js
+
+# android signing key
+android/*.keystore
+android/.bubblewrap/
+android/app/

@@ -104,6 +104,26 @@ export function AppNav() {
           </nav>
         </div>
       )}
+
+      {/* Mobile bottom nav */}
+      <nav className="fixed bottom-0 left-0 right-0 z-40 flex items-center justify-around border-t bg-sidebar safe-bottom md:hidden">
+        {navItems.slice(0, 5).map((item) => {
+          const active = pathname === item.href || pathname.startsWith(item.href + "/");
+          return (
+            <Link
+              key={item.href}
+              href={item.href}
+              className={cn(
+                "flex flex-col items-center gap-0.5 px-3 py-2 text-[10px] font-medium transition-colors",
+                active ? "text-primary" : "text-muted-foreground"
+              )}
+            >
+              <item.icon className="h-5 w-5" />
+              {item.label}
+            </Link>
+          );
+        })}
+      </nav>
     </>
   );
 }
