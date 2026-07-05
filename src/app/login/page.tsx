@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Dumbbell, ArrowLeft } from "lucide-react";
+import { Dumbbell } from "lucide-react";
 import { OAuthButtons } from "@/components/auth/oauth-buttons";
 
 export default function LoginPage() {
@@ -39,9 +39,6 @@ export default function LoginPage() {
     <div className="flex min-h-screen items-center justify-center px-4">
       <Card className="w-full max-w-md">
         <CardHeader className="space-y-3 text-center">
-          <Link href="/" className="mx-auto flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground">
-            <ArrowLeft className="h-4 w-4" /> Back home
-          </Link>
           <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10">
             <Dumbbell className="h-6 w-6 text-primary" />
           </div>
