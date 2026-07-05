@@ -6,8 +6,7 @@
   package = "@netlify/plugin-nextjs"
 
 [build.environment]
-  NEXT_PUBLIC_SUPABASE_URL = "https://your-project-ref.supabase.co"
-  NEXT_PUBLIC_SUPABASE_ANON_KEY = "your-anon-key-here"
-  NEXTAUTH_URL = "https://your-site.netlify.app"
-  NEXT_PUBLIC_SITE_URL = "https://your-site.netlify.app"
+  NEXT_PUBLIC_SUPABASE_URL = "https://lrmrlpcdpxhqvkyuwatu.supabase.co"
+  NEXT_PUBLIC_SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxybXJscGNkcHhocXZreXV3YXR1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODMyMDEyMzcsImV4cCI6MjA5ODc3NzIzN30.faB_ACaxZCXklNH2zJxHYNkS2OMK8_6jFr-5E-6x3rg"
+  NEXT_PUBLIC_SITE_URL = "https://gettempo.netlify.app"
   SECRETS_SCAN_OMIT_KEYS = "NEXT_PUBLIC_SUPABASE_ANON_KEY"
