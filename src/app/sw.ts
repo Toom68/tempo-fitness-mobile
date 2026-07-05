@@ -1,6 +1,5 @@
 /// <reference lib="webworker" />
 
-import { defaultCache } from "@serwist/next/worker";
 import type { PrecacheEntry, SerwistGlobalConfig } from "serwist";
 import { Serwist } from "serwist";
 
@@ -20,8 +19,8 @@ const serwist = new Serwist({
   precacheEntries: self.__SW_MANIFEST,
   skipWaiting: true,
   clientsClaim: true,
-  navigationPreload: true,
-  runtimeCaching: defaultCache,
+  // No navigationPreload or runtimeCaching — let the server handle all
+  // navigation requests so auth redirects always work correctly
 });
 
 // Allow the page to manually trigger skipWaiting or query the build version
