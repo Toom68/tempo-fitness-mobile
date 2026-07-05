@@ -10,10 +10,11 @@ declare global {
   }
 }
 
-const sw = self as unknown as ServiceWorkerGlobalScope;
+const ctx = self as unknown as ServiceWorkerGlobalScope;
 
 const serwist = new Serwist({
-  precacheEntries: sw.__SW_MANIFEST,
+  // @ts-expect-error: self.__SW_MANIFEST is injected by Serwist at build time
+  precacheEntries: self.__SW_MANIFEST,
   skipWaiting: true,
   clientsClaim: true,
   navigationPreload: true,
@@ -21,9 +22,9 @@ const serwist = new Serwist({
 });
 
 // Allow the page to manually trigger skipWaiting
-sw.addEventListener("message", (event) => {
+ctx.addEventListener("message", (event: ExtendableMessageEvent) => {
   if (event.data?.type === "SKIP_WAITING") {
-    sw.skipWaiting();
+    ctx.skipWaiting();
   }
 });
 
