@@ -1,8 +1,9 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useState, useEffect } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
+import { Suspense } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -34,8 +35,9 @@ const equipmentOptions: { value: Equipment; label: string }[] = [
   { value: "plate", label: "Plates" },
 ];
 
-export default function OnboardingPage() {
+function OnboardingContent() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const supabase = createClient();
   const [step, setStep] = useState(0);
   const [displayName, setDisplayName] = useState("");
@@ -44,6 +46,31 @@ export default function OnboardingPage() {
   const [unit, setUnit] = useState<UnitPreference>("kg");
   const [selectedEquipment, setSelectedEquipment] = useState<Equipment[]>([]);
   const [saving, setSaving] = useState(false);
+  const [authReady, setAuthReady] = useState(false);
+  const [saveError, setSaveError] = useState<string | null>(null);
+
+  useEffect(() => {
+    async function init() {
+      // If there's a code in the URL, exchange it for a session
+      const code = searchParams.get("code");
+      if (code) {
+        const { error } = await supabase.auth.exchangeCodeForSession(code);
+        if (error) {
+          router.push("/login?error=auth");
+          return;
+        }
+        // Clean the URL
+        router.replace("/onboarding");
+      }
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) {
+        router.push("/login");
+        return;
+      }
+      setAuthReady(true);
+    }
+    init();
+  }, []);
 
   function toggleGoal(g: Goal) {
     setSelectedGoals((prev) => (prev.includes(g) ? prev.filter((x) => x !== g) : [...prev, g]));
@@ -54,19 +81,30 @@ export default function OnboardingPage() {
 
   async function handleFinish() {
     setSaving(true);
+    setSaveError(null);
     const { data: { user } } = await supabase.auth.getUser();
-    if (!user) return;
+    if (!user) {
+      setSaveError("Not authenticated. Please log in again.");
+      setSaving(false);
+      return;
+    }
 
-    await supabase
+    const { error } = await supabase
       .from("profiles")
-      .update({
+      .upsert({
+        id: user.id,
         display_name: displayName || null,
         goals: selectedGoals,
         experience,
         unit_pref: unit,
         equipment: selectedEquipment,
-      })
-      .eq("id", user.id);
+      }, { onConflict: "id" });
+
+    if (error) {
+      setSaveError(error.message);
+      setSaving(false);
+      return;
+    }
 
     router.push("/dashboard");
     router.refresh();
@@ -95,6 +133,12 @@ export default function OnboardingPage() {
           </div>
         </CardHeader>
         <CardContent className="space-y-4">
+          {!authReady ? (
+            <div className="flex items-center justify-center py-8">
+              <p className="text-sm text-muted-foreground">Loading...</p>
+            </div>
+          ) : (
+            <>
           {step === 0 && (
             <div className="space-y-4">
               <div className="space-y-2">
@@ -214,6 +258,7 @@ export default function OnboardingPage() {
                   </button>
                 ))}
               </div>
+              {saveError && <p className="text-sm text-destructive">{saveError}</p>}
               <div className="flex gap-2">
                 <Button variant="outline" onClick={() => setStep(3)}>Back</Button>
                 <Button className="flex-1 gap-2" onClick={handleFinish} disabled={saving}>
@@ -222,8 +267,22 @@ export default function OnboardingPage() {
               </div>
             </div>
           )}
+            </>
+          )}
         </CardContent>
       </Card>
     </div>
+  );
+}
+
+export default function OnboardingPage() {
+  return (
+    <Suspense fallback={
+      <div className="flex min-h-screen items-center justify-center">
+        <p className="text-sm text-muted-foreground">Loading...</p>
+      </div>
+    }>
+      <OnboardingContent />
+    </Suspense>
   );
 }
