@@ -163,7 +163,7 @@ export default function SessionPage() {
   return (
     <div className="space-y-4 pb-24">
       {/* Header with timer */}
-      <div className="sticky top-16 z-20 -mx-4 border-b bg-background/95 px-4 py-3 backdrop-blur md:static md:top-0 md:mx-0 md:rounded-lg md:border">
+      <div className="safe-top sticky top-0 z-20 -mx-4 border-b bg-background/95 px-4 py-3 backdrop-blur md:static md:top-0 md:mx-0 md:rounded-lg md:border">
         <div className="flex items-center justify-between gap-4">
           <div className="flex items-center gap-3">
             <Button variant="ghost" size="icon" onClick={() => router.push(`/workouts/${params.id}`)}>
@@ -216,15 +216,15 @@ export default function SessionPage() {
 
       {/* Exercise tabs */}
       {exercises.length > 1 && (
-        <div className="flex gap-2 overflow-x-auto pb-2">
+        <div className="flex gap-2 overflow-x-auto pb-1 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
           {exercises.map((ex, i) => (
             <button
               key={ex.id}
               onClick={() => setCurrentExIndex(i)}
-              className={`shrink-0 rounded-md px-3 py-1.5 text-xs font-medium transition-colors ${
+              className={`shrink-0 rounded-full px-3 py-1.5 text-xs font-medium transition-colors active:scale-95 ${
                 i === currentExIndex
                   ? "bg-primary text-primary-foreground"
-                  : "bg-secondary text-secondary-foreground hover:bg-secondary/80"
+                  : "bg-secondary text-secondary-foreground"
               }`}
             >
               {ex.exercise.name}
@@ -255,32 +255,34 @@ export default function SessionPage() {
             </div>
           </CardHeader>
           <CardContent className="space-y-3">
-            <div className="grid grid-cols-[2rem_1fr_1fr_2.5rem] gap-2 text-xs font-medium text-muted-foreground">
-              <span>Set</span><span>Weight (kg)</span><span>Reps</span><span className="text-center">Done</span>
+            <div className="grid grid-cols-[1.5rem_1fr_1fr_2.5rem] gap-2 text-xs font-medium text-muted-foreground">
+              <span>Set</span><span>Weight</span><span>Reps</span><span className="text-center">Done</span>
             </div>
             {currentEx.workout_sets.map((ws) => {
               const done = completedSets.has(ws.id);
               return (
-                <div key={ws.id} className={`grid grid-cols-[2rem_1fr_1fr_2.5rem] items-center gap-2 rounded-lg p-1.5 ${done ? "bg-green-500/10" : ""}`}>
+                <div key={ws.id} className={`grid grid-cols-[1.5rem_1fr_1fr_2.5rem] items-center gap-2 rounded-lg p-1.5 ${done ? "bg-green-500/10" : ""}`}>
                   <span className="text-sm font-medium text-muted-foreground">{ws.set_number}</span>
                   <Input
                     type="number"
+                    inputMode="decimal"
                     value={ws.weight}
                     onChange={(e) => updateSetValue(ws.id, "weight", parseFloat(e.target.value) || 0)}
-                    className="h-9"
+                    className="h-10"
                   />
                   <Input
                     type="number"
+                    inputMode="numeric"
                     value={ws.reps}
                     onChange={(e) => updateSetValue(ws.id, "reps", parseInt(e.target.value) || 0)}
-                    className="h-9"
+                    className="h-10"
                   />
                   <button
                     onClick={() => {
                       toggleSet(ws.id);
                       if (!completedSets.has(ws.id)) startRest(restInitial);
                     }}
-                    className={`flex h-9 w-9 items-center justify-center rounded-md mx-auto ${
+                    className={`flex h-10 w-10 items-center justify-center rounded-md mx-auto transition-colors active:scale-90 ${
                       done ? "bg-green-500/20 text-green-500" : "bg-muted text-muted-foreground"
                     }`}
                   >
@@ -297,7 +299,7 @@ export default function SessionPage() {
                 <button
                   key={s}
                   onClick={() => startRest(s)}
-                  className="rounded-md bg-secondary px-2.5 py-1 text-xs font-medium text-secondary-foreground hover:bg-secondary/80"
+                  className="rounded-full bg-secondary px-3 py-1.5 text-xs font-medium text-secondary-foreground active:scale-95"
                 >
                   {s < 60 ? `${s}s` : `${s / 60}m`}
                 </button>
@@ -328,7 +330,7 @@ export default function SessionPage() {
       )}
 
       {/* Finish button */}
-      <div className="fixed inset-x-0 bottom-0 z-20 border-t bg-background/95 p-4 backdrop-blur md:static md:border-0 md:bg-transparent md:p-0">
+      <div className="safe-bottom fixed inset-x-0 bottom-0 z-20 border-t bg-background/95 p-3 backdrop-blur md:static md:border-0 md:bg-transparent md:p-0">
         <Button className="w-full gap-2" size="lg" onClick={handleFinish} disabled={finishing}>
           <Trophy className="h-4 w-4" />
           {finishing ? "Finishing..." : "Finish Workout"}

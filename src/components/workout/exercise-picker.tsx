@@ -122,15 +122,15 @@ export function ExercisePicker({
 
             <div className="space-y-1.5">
               <span className="text-xs font-medium">Muscle Group</span>
-              <div className="flex flex-wrap gap-1.5">
+              <div className="flex gap-1.5 overflow-x-auto pb-1 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
                 {MUSCLE_GROUPS.map((mg) => (
                   <button
                     key={mg.value}
                     onClick={() => toggleMuscle(mg.value)}
-                    className={`rounded-md px-2.5 py-1 text-xs font-medium transition-colors ${
+                    className={`shrink-0 rounded-full px-3 py-1.5 text-xs font-medium transition-colors active:scale-95 ${
                       activeMuscles.includes(mg.value)
                         ? "bg-primary text-primary-foreground"
-                        : "bg-secondary text-secondary-foreground hover:bg-secondary/80"
+                        : "bg-secondary text-secondary-foreground"
                     }`}
                   >
                     {mg.label}
@@ -141,15 +141,15 @@ export function ExercisePicker({
 
             <div className="space-y-1.5">
               <span className="text-xs font-medium">Equipment</span>
-              <div className="flex flex-wrap gap-1.5">
+              <div className="flex gap-1.5 overflow-x-auto pb-1 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
                 {EQUIPMENT_TYPES.map((eq) => (
                   <button
                     key={eq.value}
                     onClick={() => toggleEquipment(eq.value)}
-                    className={`rounded-md px-2.5 py-1 text-xs font-medium transition-colors ${
+                    className={`shrink-0 rounded-full px-3 py-1.5 text-xs font-medium transition-colors active:scale-95 ${
                       activeEquipment.includes(eq.value)
                         ? "bg-primary text-primary-foreground"
-                        : "bg-secondary text-secondary-foreground hover:bg-secondary/80"
+                        : "bg-secondary text-secondary-foreground"
                     }`}
                   >
                     {eq.label}
@@ -169,10 +169,10 @@ export function ExercisePicker({
                   <button
                     key={eff.value}
                     onClick={() => setEffectiveness(eff.value)}
-                    className={`rounded-md px-2.5 py-1 text-xs font-medium transition-colors ${
+                    className={`rounded-full px-3 py-1.5 text-xs font-medium transition-colors active:scale-95 ${
                       effectiveness === eff.value
                         ? "bg-primary text-primary-foreground"
-                        : "bg-secondary text-secondary-foreground hover:bg-secondary/80"
+                        : "bg-secondary text-secondary-foreground"
                     }`}
                   >
                     {eff.label}
@@ -190,7 +190,7 @@ export function ExercisePicker({
               <button
                 key={ex.id}
                 onClick={() => onSelect(ex)}
-                className="flex w-full items-center gap-3 rounded-md p-2 text-left hover:bg-accent"
+                className="flex w-full items-center gap-3 rounded-md p-2 text-left transition-colors active:bg-accent"
               >
                 <Dumbbell className="h-4 w-4 shrink-0 text-muted-foreground" />
                 <div className="min-w-0 flex-1">

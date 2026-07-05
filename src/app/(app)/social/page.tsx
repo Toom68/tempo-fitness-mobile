@@ -5,15 +5,13 @@ import { Badge } from "@/components/ui/badge";
 
 export default function SocialPage() {
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold">Social</h1>
-          <p className="text-sm text-muted-foreground">Friends, challenges & leaderboards</p>
-        </div>
+    <div className="space-y-5 md:space-y-6">
+      <div>
+        <h1 className="text-xl font-bold md:text-2xl">Social</h1>
+        <p className="text-sm text-muted-foreground">Friends, challenges & leaderboards</p>
       </div>
 
-      <div className="grid gap-4 sm:grid-cols-2">
+      <div className="grid gap-3 md:gap-4 sm:grid-cols-2">
         <Card>
           <CardHeader>
             <div className="flex items-center gap-3">

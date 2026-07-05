@@ -50,13 +50,13 @@ export default function ExercisesPage() {
   }, [exercises, search, muscleFilter, equipmentFilter]);
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-5 md:space-y-6">
       <div>
-        <h1 className="text-2xl font-bold">Exercise Library</h1>
+        <h1 className="text-xl font-bold md:text-2xl">Exercise Library</h1>
         <p className="text-sm text-muted-foreground">Browse {exercises?.length ?? 0} exercises</p>
       </div>
 
-      <div className="space-y-4">
+      <div className="space-y-3">
         <div className="relative">
           <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
           <Input
@@ -67,15 +67,15 @@ export default function ExercisesPage() {
           />
         </div>
 
-        <div className="flex flex-wrap gap-2">
+        <div className="flex gap-2 overflow-x-auto pb-1 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
           {muscleGroups.map((mg) => (
             <button
               key={mg}
               onClick={() => setMuscleFilter(mg)}
-              className={`rounded-md px-3 py-1 text-xs font-medium capitalize transition-colors ${
+              className={`shrink-0 rounded-full px-3 py-1.5 text-xs font-medium capitalize transition-colors active:scale-95 ${
                 muscleFilter === mg
                   ? "bg-primary text-primary-foreground"
-                  : "bg-secondary text-secondary-foreground hover:bg-secondary/80"
+                  : "bg-secondary text-secondary-foreground"
               }`}
             >
               {mg === "all" ? "All muscles" : mg.replace("_", " ")}
@@ -83,15 +83,15 @@ export default function ExercisesPage() {
           ))}
         </div>
 
-        <div className="flex flex-wrap gap-2">
+        <div className="flex gap-2 overflow-x-auto pb-1 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
           {equipmentTypes.map((eq) => (
             <button
               key={eq}
               onClick={() => setEquipmentFilter(eq)}
-              className={`rounded-md px-3 py-1 text-xs font-medium capitalize transition-colors ${
+              className={`shrink-0 rounded-full px-3 py-1.5 text-xs font-medium capitalize transition-colors active:scale-95 ${
                 equipmentFilter === eq
                   ? "bg-primary text-primary-foreground"
-                  : "bg-secondary text-secondary-foreground hover:bg-secondary/80"
+                  : "bg-secondary text-secondary-foreground"
               }`}
             >
               {eq === "all" ? "All equipment" : eq}
@@ -101,7 +101,7 @@ export default function ExercisesPage() {
       </div>
 
       {isLoading ? (
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
           {Array.from({ length: 6 }).map((_, i) => (
             <Card key={i} className="animate-pulse">
               <CardContent className="h-32" />
@@ -109,10 +109,10 @@ export default function ExercisesPage() {
           ))}
         </div>
       ) : filtered.length > 0 ? (
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
           {filtered.map((exercise) => (
             <Link key={exercise.id} href={`/exercises/${exercise.id}`}>
-              <Card className="cursor-pointer transition-colors hover:bg-accent/50">
+              <Card className="cursor-pointer transition-colors active:bg-accent/50 md:hover:bg-accent/50">
                 <CardHeader>
                   <div className="flex items-start justify-between gap-2">
                     <CardTitle className="text-base">{exercise.name}</CardTitle>

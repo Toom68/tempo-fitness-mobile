@@ -2,11 +2,12 @@ import { createClient } from "@/lib/supabase/server";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { ArrowLeft, Clock, Calendar, Dumbbell, Pencil, Play } from "lucide-react";
+import { Clock, Calendar, Dumbbell, Pencil, Play } from "lucide-react";
 import Link from "next/link";
 import { formatDate, formatDuration } from "@/lib/utils";
 import { notFound } from "next/navigation";
 import { DeleteWorkoutButton } from "@/components/workout/delete-workout-button";
+import { BackHeader } from "@/components/shared/back-header";
 
 export default async function WorkoutDetailPage({
   params,
@@ -39,31 +40,15 @@ export default async function WorkoutDetailPage({
   exercises.sort((a: { order: number }, b: { order: number }) => a.order - b.order);
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center gap-3">
-        <Link href="/workouts">
-          <Button variant="ghost" size="icon">
-            <ArrowLeft className="h-4 w-4" />
-          </Button>
-        </Link>
-        <div className="flex flex-1 items-center justify-between">
-          <div>
-            <h1 className="text-2xl font-bold">{workout.name}</h1>
-            <div className="flex items-center gap-3 text-sm text-muted-foreground">
-              <span className="flex items-center gap-1">
-                <Calendar className="h-3.5 w-3.5" /> {formatDate(workout.date)}
-              </span>
-              {workout.duration ? (
-                <span className="flex items-center gap-1">
-                  <Clock className="h-3.5 w-3.5" /> {formatDuration(workout.duration)}
-                </span>
-              ) : null}
-            </div>
-          </div>
-          <div className="flex gap-2">
+    <div className="space-y-5 md:space-y-6">
+      <BackHeader
+        title={workout.name}
+        href="/workouts"
+        rightSlot={
+          <>
             <Link href={`/workouts/${id}/session`}>
               <Button size="sm" className="gap-2">
-                <Play className="h-4 w-4" /> Start Session
+                <Play className="h-4 w-4" /> <span className="hidden sm:inline">Start Session</span><span className="sm:hidden">Start</span>
               </Button>
             </Link>
             <Link href={`/workouts/${id}/edit`}>
@@ -71,8 +56,19 @@ export default async function WorkoutDetailPage({
                 <Pencil className="h-4 w-4" />
               </Button>
             </Link>
-          </div>
-        </div>
+          </>
+        }
+      />
+
+      <div className="flex items-center gap-2 text-xs text-muted-foreground md:gap-3 md:text-sm">
+        <span className="flex items-center gap-1">
+          <Calendar className="h-3.5 w-3.5" /> {formatDate(workout.date)}
+        </span>
+        {workout.duration ? (
+          <span className="flex items-center gap-1">
+            <Clock className="h-3.5 w-3.5" /> {formatDuration(workout.duration)}
+          </span>
+        ) : null}
       </div>
 
       {workout.notes && (
@@ -83,7 +79,7 @@ export default async function WorkoutDetailPage({
         </Card>
       )}
 
-      <div className="space-y-4">
+      <div className="space-y-3 md:space-y-4">
         {exercises.map((we: any) => {
           const sets = we.workout_sets ?? [];
           sets.sort((a: { set_number: number }, b: { set_number: number }) => a.set_number - b.set_number);

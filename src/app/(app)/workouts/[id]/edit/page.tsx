@@ -8,8 +8,9 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Plus, Trash2, ArrowLeft, Save, Check } from "lucide-react";
+import { Plus, Trash2, Save, Check } from "lucide-react";
 import { ExercisePicker } from "@/components/workout/exercise-picker";
+import { BackHeader } from "@/components/shared/back-header";
 import type { Exercise } from "@/types";
 
 interface SetRow {
@@ -183,13 +184,8 @@ export default function EditWorkoutPage() {
   }
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center gap-3">
-        <Button variant="ghost" size="icon" onClick={() => router.back()}>
-          <ArrowLeft className="h-4 w-4" />
-        </Button>
-        <h1 className="text-2xl font-bold">Edit Workout</h1>
-      </div>
+    <div className="space-y-5 md:space-y-6">
+      <BackHeader title="Edit Workout" />
 
       <div className="space-y-2">
         <Label htmlFor="workout-name">Workout Name</Label>
@@ -210,19 +206,19 @@ export default function EditWorkoutPage() {
             </Button>
           </CardHeader>
           <CardContent className="space-y-2">
-            <div className="grid grid-cols-[2rem_1fr_1fr_2rem] gap-2 text-xs font-medium text-muted-foreground">
+            <div className="grid grid-cols-[1.5rem_1fr_1fr_2.25rem] gap-2 text-xs font-medium text-muted-foreground">
               <span>Set</span><span>Weight</span><span>Reps</span><span></span>
             </div>
             {ex.sets.map((set, setIndex) => (
-              <div key={setIndex} className="grid grid-cols-[2rem_1fr_1fr_2rem] items-center gap-2">
+              <div key={setIndex} className="grid grid-cols-[1.5rem_1fr_1fr_2.25rem] items-center gap-2">
                 <span className="text-sm text-muted-foreground">{setIndex + 1}</span>
-                <Input type="number" placeholder="0" value={set.weight} onChange={(e) => updateSet(exIndex, setIndex, "weight", e.target.value)} className="h-8" />
-                <Input type="number" placeholder="10" value={set.reps} onChange={(e) => updateSet(exIndex, setIndex, "reps", e.target.value)} className="h-8" />
-                <button onClick={() => toggleSetComplete(exIndex, setIndex)} className={`flex h-8 w-8 items-center justify-center rounded-md ${set.completed ? "bg-green-500/20 text-green-500" : "bg-muted text-muted-foreground"}`}>
+                <Input type="number" inputMode="decimal" placeholder="0" value={set.weight} onChange={(e) => updateSet(exIndex, setIndex, "weight", e.target.value)} className="h-10" />
+                <Input type="number" inputMode="numeric" placeholder="10" value={set.reps} onChange={(e) => updateSet(exIndex, setIndex, "reps", e.target.value)} className="h-10" />
+                <button onClick={() => toggleSetComplete(exIndex, setIndex)} className={`flex h-10 w-9 items-center justify-center rounded-md transition-colors active:scale-95 ${set.completed ? "bg-green-500/20 text-green-500" : "bg-muted text-muted-foreground"}`}>
                   <Check className="h-4 w-4" />
                 </button>
                 {ex.sets.length > 1 && (
-                  <button onClick={() => removeSet(exIndex, setIndex)} className="col-start-5 text-destructive hover:text-destructive/80">
+                  <button onClick={() => removeSet(exIndex, setIndex)} className="col-start-4 -mt-1 justify-self-end text-destructive active:scale-95">
                     <Trash2 className="h-3.5 w-3.5" />
                   </button>
                 )}

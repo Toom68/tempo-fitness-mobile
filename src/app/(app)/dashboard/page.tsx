@@ -82,20 +82,20 @@ export default async function DashboardPage() {
   const unit = profile?.unit_pref ?? "kg";
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-5 md:space-y-6">
       <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold">Welcome back{profile?.display_name ? `, ${profile.display_name}` : ""}</h1>
+        <div className="min-w-0">
+          <h1 className="truncate text-xl font-bold md:text-2xl">Welcome back{profile?.display_name ? `, ${profile.display_name}` : ""}</h1>
           <p className="text-sm text-muted-foreground">Let&apos;s check your progress</p>
         </div>
-        <Link href="/workouts/new">
-          <Button className="gap-2">
-            <Plus className="h-4 w-4" /> New Workout
+        <Link href="/workouts/new" className="shrink-0">
+          <Button className="gap-2" size="sm">
+            <Plus className="h-4 w-4" /> <span className="hidden sm:inline">New Workout</span><span className="sm:hidden">New</span>
           </Button>
         </Link>
       </div>
 
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="grid grid-cols-2 gap-3 md:gap-4 lg:grid-cols-4">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium text-muted-foreground">Total Workouts</CardTitle>
@@ -134,7 +134,7 @@ export default async function DashboardPage() {
         </Card>
       </div>
 
-      <div className="grid gap-4 lg:grid-cols-2">
+      <div className="grid gap-3 md:gap-4 lg:grid-cols-2">
         <Card>
           <CardHeader>
             <CardTitle className="text-base">This Week</CardTitle>
@@ -178,14 +178,14 @@ export default async function DashboardPage() {
       </div>
 
       <div>
-        <div className="mb-4 flex items-center justify-between">
-          <h2 className="text-lg font-semibold">Recent Workouts</h2>
-          <Link href="/workouts" className="text-sm text-muted-foreground hover:text-foreground">
+        <div className="mb-3 flex items-center justify-between">
+          <h2 className="text-base font-semibold md:text-lg">Recent Workouts</h2>
+          <Link href="/workouts" className="text-sm text-muted-foreground active:text-foreground">
             View all
           </Link>
         </div>
         {recentWorkouts && recentWorkouts.length > 0 ? (
-          <div className="space-y-3">
+          <div className="space-y-2 md:space-y-3">
             {recentWorkouts.map((workout) => {
               const exList = workout.workout_exercises ?? [];
               let vol = 0;
@@ -196,23 +196,23 @@ export default async function DashboardPage() {
               }
               return (
                 <Link key={workout.id} href={`/workouts/${workout.id}`}>
-                  <Card className="cursor-pointer transition-colors hover:bg-accent/50">
-                    <CardContent className="flex items-center justify-between py-4">
-                      <div className="flex items-center gap-4">
-                        <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10">
+                  <Card className="cursor-pointer transition-colors active:bg-accent/50 md:hover:bg-accent/50">
+                    <CardContent className="flex items-center justify-between py-3 md:py-4">
+                      <div className="flex min-w-0 items-center gap-3 md:gap-4">
+                        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-primary/10">
                           <Calendar className="h-5 w-5 text-primary" />
                         </div>
-                        <div>
-                          <p className="font-medium">{workout.name}</p>
-                          <p className="text-sm text-muted-foreground">
+                        <div className="min-w-0">
+                          <p className="truncate font-medium">{workout.name}</p>
+                          <p className="text-xs text-muted-foreground md:text-sm">
                             {formatDate(workout.date)}
                             {workout.duration ? ` · ${formatDuration(workout.duration)}` : ""}
                           </p>
                         </div>
                       </div>
-                      <div className="text-right text-sm text-muted-foreground">
-                        <p>{exList.length} exercises</p>
-                        {vol > 0 && <p className="text-xs">{vol.toLocaleString()} {unit}</p>}
+                      <div className="shrink-0 text-right text-xs text-muted-foreground md:text-sm">
+                        <p>{exList.length} ex</p>
+                        {vol > 0 && <p className="text-[11px]">{vol.toLocaleString()} {unit}</p>}
                       </div>
                     </CardContent>
                   </Card>

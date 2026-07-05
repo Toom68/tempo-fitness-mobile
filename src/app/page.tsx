@@ -31,11 +31,11 @@ export default function LandingPage() {
   return (
     <div className="flex flex-col">
       <section className="relative overflow-hidden border-b">
-        <div className="container mx-auto flex max-w-4xl flex-col items-center gap-6 px-4 py-24 text-center">
+        <div className="container mx-auto flex max-w-4xl flex-col items-center gap-6 px-4 py-16 text-center md:py-24">
           <Badge variant="secondary" className="mb-2">
             Open Source · No Paywalls · No Ads
           </Badge>
-          <h1 className="text-4xl font-bold tracking-tight sm:text-6xl">
+          <h1 className="text-3xl font-bold tracking-tight sm:text-5xl md:text-6xl">
             Track workouts.<br />Actually free.
           </h1>
           <p className="max-w-2xl text-lg text-muted-foreground">
@@ -62,9 +62,9 @@ export default function LandingPage() {
         </div>
       </section>
 
-      <section className="container mx-auto max-w-5xl px-4 py-20">
-        <div className="mb-12 text-center">
-          <h2 className="text-3xl font-bold tracking-tight">Why Tempo?</h2>
+      <section className="container mx-auto max-w-5xl px-4 py-12 md:py-20">
+        <div className="mb-8 text-center md:mb-12">
+          <h2 className="text-2xl font-bold tracking-tight md:text-3xl">Why Tempo?</h2>
           <p className="mt-2 text-muted-foreground">Everything you need, nothing you don&apos;t.</p>
         </div>
         <div className="grid gap-6 sm:grid-cols-2">
@@ -83,8 +83,8 @@ export default function LandingPage() {
       </section>
 
       <section className="border-t bg-muted/50">
-        <div className="container mx-auto flex max-w-2xl flex-col items-center gap-6 px-4 py-20 text-center">
-          <h2 className="text-3xl font-bold tracking-tight">Ready to start training?</h2>
+        <div className="container mx-auto flex max-w-2xl flex-col items-center gap-6 px-4 py-16 text-center md:py-20">
+          <h2 className="text-2xl font-bold tracking-tight md:text-3xl">Ready to start training?</h2>
           <p className="text-muted-foreground">
             Join the community. It&apos;s free, it&apos;s fast, and it&apos;s yours.
           </p>

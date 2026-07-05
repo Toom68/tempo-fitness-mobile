@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
-import { Settings, User, Dumbbell, LogOut } from "lucide-react";
+import { Settings, User, Dumbbell, LogOut, RefreshCw } from "lucide-react";
 import { useRouter } from "next/navigation";
 import type { Goal, ExperienceLevel, UnitPreference, Equipment } from "@/types";
 
@@ -45,6 +45,8 @@ export default function SettingsPage() {
   const [selectedEquipment, setSelectedEquipment] = useState<Equipment[]>([]);
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
+  const [checking, setChecking] = useState(false);
+  const [updateStatus, setUpdateStatus] = useState("");
 
   function toggleGoal(goal: Goal) {
     setSelectedGoals((prev) =>
@@ -85,10 +87,35 @@ export default function SettingsPage() {
     router.refresh();
   }
 
+  async function handleCheckUpdate() {
+    setChecking(true);
+    setUpdateStatus("");
+    try {
+      const reg = await navigator.serviceWorker?.getRegistration();
+      if (!reg) {
+        setUpdateStatus("Updates are managed automatically in the background.");
+        return;
+      }
+      await reg.update();
+      if (reg.waiting) {
+        setUpdateStatus("A new version is available. Reloading...");
+        reg.waiting.postMessage({ type: "SKIP_WAITING" });
+        setTimeout(() => window.location.reload(), 500);
+      } else {
+        setUpdateStatus("You're up to date!");
+        setTimeout(() => setUpdateStatus(""), 3000);
+      }
+    } catch {
+      setUpdateStatus("Could not check for updates right now.");
+    } finally {
+      setChecking(false);
+    }
+  }
+
   return (
-    <div className="space-y-6">
+    <div className="space-y-5 md:space-y-6">
       <div>
-        <h1 className="text-2xl font-bold">Settings</h1>
+        <h1 className="text-xl font-bold md:text-2xl">Settings</h1>
         <p className="text-sm text-muted-foreground">Manage your profile and preferences</p>
       </div>
 
@@ -122,10 +149,10 @@ export default function SettingsPage() {
                 <button
                   key={g.value}
                   onClick={() => toggleGoal(g.value)}
-                  className={`rounded-md px-3 py-1.5 text-sm font-medium transition-colors ${
+                  className={`rounded-full px-3 py-1.5 text-sm font-medium transition-colors active:scale-95 ${
                     selectedGoals.includes(g.value)
                       ? "bg-primary text-primary-foreground"
-                      : "bg-secondary text-secondary-foreground hover:bg-secondary/80"
+                      : "bg-secondary text-secondary-foreground"
                   }`}
                 >
                   {g.label}
@@ -141,10 +168,10 @@ export default function SettingsPage() {
                 <button
                   key={lvl.value}
                   onClick={() => setExperience(lvl.value)}
-                  className={`rounded-md px-3 py-1.5 text-sm font-medium transition-colors ${
+                  className={`rounded-full px-3 py-1.5 text-sm font-medium transition-colors active:scale-95 ${
                     experience === lvl.value
                       ? "bg-primary text-primary-foreground"
-                      : "bg-secondary text-secondary-foreground hover:bg-secondary/80"
+                      : "bg-secondary text-secondary-foreground"
                   }`}
                 >
                   {lvl.label}
@@ -160,10 +187,10 @@ export default function SettingsPage() {
                 <button
                   key={u}
                   onClick={() => setUnit(u)}
-                  className={`rounded-md px-4 py-1.5 text-sm font-medium transition-colors ${
+                  className={`rounded-full px-4 py-1.5 text-sm font-medium transition-colors active:scale-95 ${
                     unit === u
                       ? "bg-primary text-primary-foreground"
-                      : "bg-secondary text-secondary-foreground hover:bg-secondary/80"
+                      : "bg-secondary text-secondary-foreground"
                   }`}
                 >
                   {u === "kg" ? "Kilograms (kg)" : "Pounds (lb)"}
@@ -179,10 +206,10 @@ export default function SettingsPage() {
                 <button
                   key={eq.value}
                   onClick={() => toggleEquipment(eq.value)}
-                  className={`rounded-md px-3 py-1.5 text-sm font-medium transition-colors ${
+                  className={`rounded-full px-3 py-1.5 text-sm font-medium transition-colors active:scale-95 ${
                     selectedEquipment.includes(eq.value)
                       ? "bg-primary text-primary-foreground"
-                      : "bg-secondary text-secondary-foreground hover:bg-secondary/80"
+                      : "bg-secondary text-secondary-foreground"
                   }`}
                 >
                   {eq.label}
@@ -204,10 +231,25 @@ export default function SettingsPage() {
         <CardContent className="py-4">
           <button
             onClick={handleLogout}
-            className="flex items-center gap-2 text-sm font-medium text-destructive hover:text-destructive/80"
+            className="flex items-center gap-2 text-sm font-medium text-destructive active:text-destructive/80"
           >
             <LogOut className="h-4 w-4" /> Log Out
           </button>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardContent className="py-4">
+          <button
+            onClick={handleCheckUpdate}
+            disabled={checking}
+            className="flex items-center gap-2 text-sm font-medium active:scale-95"
+          >
+            <RefreshCw className={`h-4 w-4 ${checking ? "animate-spin" : ""}`} /> Check for Updates
+          </button>
+          {updateStatus && (
+            <p className="mt-2 text-xs text-muted-foreground">{updateStatus}</p>
+          )}
         </CardContent>
       </Card>
     </div>

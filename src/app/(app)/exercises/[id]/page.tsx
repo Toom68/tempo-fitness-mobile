@@ -2,9 +2,10 @@ import { createClient } from "@/lib/supabase/server";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { ArrowLeft, Dumbbell, Plus } from "lucide-react";
+import { Dumbbell, Plus } from "lucide-react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { BackHeader } from "@/components/shared/back-header";
 
 export default async function ExerciseDetailPage({
   params,
@@ -23,15 +24,8 @@ export default async function ExerciseDetailPage({
   if (!exercise) notFound();
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center gap-3">
-        <Link href="/exercises">
-          <Button variant="ghost" size="icon">
-            <ArrowLeft className="h-4 w-4" />
-          </Button>
-        </Link>
-        <h1 className="text-2xl font-bold">{exercise.name}</h1>
-      </div>
+    <div className="space-y-5 md:space-y-6">
+      <BackHeader title={exercise.name} href="/exercises" />
 
       <div className="flex flex-wrap gap-2">
         <Badge variant="secondary" className="capitalize">

@@ -158,5 +158,20 @@
   /* Better touch targets */
   button, a {
     touch-action: manipulation;
+    -webkit-user-select: none;
+    user-select: none;
+    -webkit-touch-callout: none;
+  }
+
+  /* Allow text selection in inputs */
+  input, textarea, [contenteditable="true"] {
+    -webkit-user-select: text;
+    user-select: text;
+    -webkit-touch-callout: default;
+  }
+
+  /* Momentum scrolling on mobile */
+  * {
+    -webkit-overflow-scrolling: touch;
   }
 }
