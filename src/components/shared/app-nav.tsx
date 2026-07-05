@@ -2,14 +2,16 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Dumbbell, LayoutDashboard, Dumbbell as Workout, BookOpen, Users, Settings, LogOut } from "lucide-react";
+import { Dumbbell, LayoutDashboard, Dumbbell as Workout, BookOpen, Users, Settings, LogOut, Target } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { cn } from "@/lib/utils";
 import { Native } from "@/lib/native";
+import { ThemeToggle } from "@/components/shared/theme-toggle";
 
 const navItems = [
   { href: "/dashboard", label: "Home", icon: LayoutDashboard },
   { href: "/workouts", label: "Workouts", icon: Workout },
+  { href: "/programs", label: "Programs", icon: Target },
   { href: "/exercises", label: "Exercises", icon: BookOpen },
   { href: "/social", label: "Social", icon: Users },
   { href: "/settings", label: "Settings", icon: Settings },
@@ -31,6 +33,9 @@ export function AppNav() {
         <div className="flex h-16 items-center gap-2 border-b px-6">
           <Dumbbell className="h-6 w-6 text-primary" />
           <span className="text-lg font-bold">Tempo Fitness</span>
+          <div className="ml-auto">
+            <ThemeToggle />
+          </div>
         </div>
         <nav className="flex flex-col gap-1 p-4">
           {navItems.map((item) => (

@@ -12,7 +12,7 @@ export default async function DashboardPage() {
 
   if (!user) return null;
 
-  const [{ data: profile }, { data: recentWorkouts }, { data: allWorkouts }] = await Promise.all([
+  const [{ data: profile }, { data: recentWorkouts }, { data: allWorkouts }, { data: userBadges }] = await Promise.all([
     supabase.from("profiles").select("*").eq("id", user.id).single(),
     supabase
       .from("workouts")
@@ -25,6 +25,12 @@ export default async function DashboardPage() {
       .select("id, date, duration, completed, workout_exercises(workout_sets(reps, weight))")
       .eq("user_id", user.id)
       .eq("completed", true),
+    supabase
+      .from("user_badges")
+      .select("badge:badges(name, description, icon), earned_at")
+      .eq("user_id", user.id)
+      .order("earned_at", { ascending: false })
+      .limit(8),
   ]);
 
   const totalWorkouts = allWorkouts?.length ?? 0;
@@ -182,6 +188,26 @@ export default async function DashboardPage() {
           </CardContent>
         </Card>
       </div>
+
+      {userBadges && userBadges.length > 0 && (
+        <div>
+          <h2 className="mb-3 text-base font-semibold md:text-lg">Achievements</h2>
+          <div className="flex flex-wrap gap-2">
+            {userBadges.map((ub: any, i: number) => (
+              <div
+                key={i}
+                className="flex items-center gap-2 rounded-lg border bg-card px-3 py-2"
+                title={ub.badge?.description}
+              >
+                <span className="text-xl">{ub.badge?.icon}</span>
+                <div className="min-w-0">
+                  <p className="truncate text-xs font-medium">{ub.badge?.name}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
 
       <div>
         <div className="mb-3 flex items-center justify-between">

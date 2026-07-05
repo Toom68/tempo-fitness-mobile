@@ -7,8 +7,9 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
-import { Settings, User, Dumbbell, LogOut, RefreshCw, Trash2 } from "lucide-react";
+import { Settings, User, Dumbbell, LogOut, RefreshCw, Trash2, Moon, Sun, Monitor } from "lucide-react";
 import type { Goal, ExperienceLevel, UnitPreference, Equipment } from "@/types";
+import { useTheme } from "@/components/providers/theme-provider";
 
 const goals: { value: Goal; label: string }[] = [
   { value: "strength", label: "Strength" },
@@ -32,6 +33,33 @@ const equipmentOptions: { value: Equipment; label: string }[] = [
   { value: "bodyweight", label: "Bodyweight" },
   { value: "bands", label: "Bands" },
 ];
+
+function ThemeRow() {
+  const { theme, setTheme } = useTheme();
+  const options: { value: "light" | "dark" | "system"; label: string; icon: typeof Moon }[] = [
+    { value: "light", label: "Light", icon: Sun },
+    { value: "dark", label: "Dark", icon: Moon },
+    { value: "system", label: "System", icon: Monitor },
+  ];
+  return (
+    <div className="flex gap-2">
+      {options.map((opt) => (
+        <button
+          key={opt.value}
+          onClick={() => setTheme(opt.value)}
+          className={`flex flex-1 items-center justify-center gap-2 rounded-lg border p-2.5 text-sm font-medium transition-colors active:scale-95 ${
+            theme === opt.value
+              ? "border-primary bg-primary/10 text-primary"
+              : "border-border text-muted-foreground"
+          }`}
+        >
+          <opt.icon className="h-4 w-4" />
+          {opt.label}
+        </button>
+      ))}
+    </div>
+  );
+}
 
 export default function SettingsPage() {
   const supabase = createClient();
@@ -241,6 +269,15 @@ export default function SettingsPage() {
             </Button>
             {saved && <Badge variant="secondary" className="text-green-500">Saved!</Badge>}
           </div>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-base">Appearance</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <ThemeRow />
         </CardContent>
       </Card>
 

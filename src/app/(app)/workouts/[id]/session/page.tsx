@@ -107,13 +107,22 @@ export default function SessionPage() {
   const toggleSet = useCallback((setId: string) => {
     setCompletedSets((prev) => {
       const next = new Set(prev);
-      if (next.has(setId)) {
-        next.delete(setId);
-        Native.haptics.impact("light");
-      } else {
+      const isCompleting = !next.has(setId);
+      if (isCompleting) {
         next.add(setId);
         Native.haptics.impact("medium");
+      } else {
+        next.delete(setId);
+        Native.haptics.impact("light");
       }
+      // Optimistic persist — fire and forget, don't block UI
+      supabase
+        .from("workout_sets")
+        .update({ completed: isCompleting })
+        .eq("id", setId)
+        .then(({ error }) => {
+          if (error) console.warn("Failed to persist set toggle:", error.message);
+        });
       return next;
     });
   }, []);
@@ -127,6 +136,19 @@ export default function SessionPage() {
         ),
       }))
     );
+    // Debounced persist — save after user stops editing
+    const key = `set_${setId}_${field}`;
+    if ((window as any).__setDebounce?.[key]) clearTimeout((window as any).__setDebounce[key]);
+    (window as any).__setDebounce = (window as any).__setDebounce || {};
+    (window as any).__setDebounce[key] = setTimeout(() => {
+      supabase
+        .from("workout_sets")
+        .update({ [field]: value })
+        .eq("id", setId)
+        .then(({ error }) => {
+          if (error) console.warn("Failed to persist set value:", error.message);
+        });
+    }, 800);
   }, []);
 
   const totalSets = exercises.reduce((sum, ex) => sum + ex.workout_sets.length, 0);
@@ -177,6 +199,9 @@ export default function SessionPage() {
       .from("workouts")
       .update({ completed: true, duration: elapsed })
       .eq("id", params.id);
+
+    // Check for new badges (fire and forget)
+    fetch("/api/badges/check", { method: "POST" }).catch(() => {});
 
     if (newPrs.length > 0) {
       Native.haptics.impact("heavy");
