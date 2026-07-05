@@ -1,30 +1,54 @@
 {
-  "packageId": "com.tomyfitness.tempo",
+  "packageId": "app.netlify.gettempo_mobile.twa",
   "host": "gettempo-mobile.netlify.app",
   "name": "Tempo Fitness",
   "launcherName": "Tempo",
   "display": "standalone",
-  "orientation": "portrait",
-  "themeColor": "#0a0a0a",
-  "themeColorDark": "#0a0a0a",
-  "navigationColor": "#0a0a0a",
-  "navigationColorDark": "#0a0a0a",
-  "navigationDividerColor": "#0a0a0a",
-  "navigationDividerColorDark": "#0a0a0a",
-  "backgroundColor": "#0a0a0a",
-  "enableNotifications": false,
+  "themeColor": "#0A0A0A",
+  "themeColorDark": "#000000",
+  "navigationColor": "#000000",
+  "navigationColorDark": "#000000",
+  "navigationDividerColor": "#000000",
+  "navigationDividerColorDark": "#000000",
+  "backgroundColor": "#0A0A0A",
+  "enableNotifications": true,
   "startUrl": "/dashboard",
   "iconUrl": "https://gettempo-mobile.netlify.app/icons/icon-512.png",
   "maskableIconUrl": "https://gettempo-mobile.netlify.app/icons/maskable-512.png",
   "splashScreenFadeOutDuration": 300,
   "signingKey": {
-    "path": "./android.keystore",
+    "path": "C:\\Users\\tomy\\Downloads\\workoutapp\\android\\android.keystore",
     "alias": "android"
   },
-  "appVersionName": "0.1.0",
+  "appVersionName": "1",
   "appVersionCode": 1,
-  "shortName": "Tempo",
+  "shortcuts": [],
+  "generatorApp": "bubblewrap-cli",
+  "webManifestUrl": "https://gettempo-mobile.netlify.app/manifest.json",
+  "fallbackType": "customtabs",
+  "features": {
+    "playBilling": {
+      "enabled": true
+    },
+    "locationDelegation": {
+      "enabled": true
+    }
+  },
+  "alphaDependencies": {
+    "enabled": false
+  },
+  "enableSiteSettingsShortcut": true,
+  "isChromeOSOnly": false,
+  "isMetaQuest": false,
   "fullScopeUrl": "https://gettempo-mobile.netlify.app/",
   "minSdkVersion": 21,
-  "_comment": "Run 'bubblewrap update' after editing this file to regenerate the Android project"
+  "orientation": "portrait-primary",
+  "fingerprints": [],
+  "additionalTrustedOrigins": [],
+  "retainedBundles": [],
+  "protocolHandlers": [],
+  "fileHandlers": [],
+  "launchHandlerClientMode": "",
+  "displayOverride": [],
+  "appVersion": "1"
 }

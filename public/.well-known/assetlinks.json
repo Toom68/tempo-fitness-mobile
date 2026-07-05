@@ -3,9 +3,9 @@
     "relation": ["delegate_permission/common.handle_all_urls"],
     "target": {
       "namespace": "android_app",
-      "package_name": "com.tomyfitness.tempo",
+      "package_name": "app.netlify.gettempo_mobile.twa",
       "sha256_cert_fingerprints": [
-        "PLACEHOLDER_REPLACE_WITH_YOUR_SIGNING_KEY_FINGERPRINT"
+        "5F:06:6C:7D:FB:0A:D1:0A:B5:18:24:5D:84:68:FB:9A:DC:02:A4:BD:76:DB:28:E6:0C:EE:49:15:26:99:C5:99"
       ]
     }
   }
