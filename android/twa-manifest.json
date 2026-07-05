@@ -1,6 +1,6 @@
 {
   "packageId": "com.tomyfitness.tempo",
-  "host": "gettempo.netlify.app",
+  "host": "gettempo-mobile.netlify.app",
   "name": "Tempo Fitness",
   "launcherName": "Tempo",
   "display": "standalone",
@@ -14,8 +14,8 @@
   "backgroundColor": "#0a0a0a",
   "enableNotifications": false,
   "startUrl": "/dashboard",
-  "iconUrl": "https://gettempo.netlify.app/icons/icon-512.png",
-  "maskableIconUrl": "https://gettempo.netlify.app/icons/maskable-512.png",
+  "iconUrl": "https://gettempo-mobile.netlify.app/icons/icon-512.png",
+  "maskableIconUrl": "https://gettempo-mobile.netlify.app/icons/maskable-512.png",
   "splashScreenFadeOutDuration": 300,
   "signingKey": {
     "path": "./android.keystore",
@@ -24,7 +24,7 @@
   "appVersionName": "0.1.0",
   "appVersionCode": 1,
   "shortName": "Tempo",
-  "fullScopeUrl": "https://gettempo.netlify.app/",
+  "fullScopeUrl": "https://gettempo-mobile.netlify.app/",
   "minSdkVersion": 21,
   "_comment": "Run 'bubblewrap update' after editing this file to regenerate the Android project"
 }
