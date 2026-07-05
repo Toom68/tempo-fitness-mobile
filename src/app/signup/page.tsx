@@ -58,6 +58,15 @@ export default function SignupPage() {
           <CardDescription>Free forever. No credit card. No ads.</CardDescription>
         </CardHeader>
         <CardContent>
+          <OAuthButtons redirectTo="/onboarding" />
+          <div className="relative my-4">
+            <div className="absolute inset-0 flex items-center">
+              <span className="w-full border-t" />
+            </div>
+            <div className="relative flex justify-center text-xs uppercase">
+              <span className="bg-background px-2 text-muted-foreground">or sign up with email</span>
+            </div>
+          </div>
           <form onSubmit={handleSignup} className="space-y-4">
             <div className="space-y-2">
               <Label htmlFor="username">Username</Label>
@@ -98,15 +107,6 @@ export default function SignupPage() {
               {loading ? "Creating account..." : "Sign Up Free"}
             </Button>
           </form>
-          <div className="relative my-4">
-            <div className="absolute inset-0 flex items-center">
-              <span className="w-full border-t" />
-            </div>
-            <div className="relative flex justify-center text-xs uppercase">
-              <span className="bg-background px-2 text-muted-foreground">or</span>
-            </div>
-          </div>
-          <OAuthButtons redirectTo="/onboarding" />
           <p className="mt-4 text-center text-sm text-muted-foreground">
             Already have an account?{" "}
             <Link href="/login" className="font-medium text-foreground hover:underline">
