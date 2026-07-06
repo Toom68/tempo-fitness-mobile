@@ -21,7 +21,7 @@ export function BackHeader({ title, href, rightSlot }: BackHeaderProps) {
   }
 
   return (
-    <div className="safe-top sticky top-0 z-20 -mx-4 flex h-14 items-center gap-2 border-b bg-background/95 px-2 backdrop-blur md:static md:mx-0 md:border-0 md:bg-transparent md:px-0 md:backdrop-blur-none">
+    <div className="sticky top-0 z-20 -mx-4 flex h-14 items-center gap-2 border-b bg-background/95 px-2 pt-[max(env(safe-area-inset-top),0px)] backdrop-blur md:static md:mx-0 md:border-0 md:bg-transparent md:px-0 md:backdrop-blur-none">
       <button
         onClick={handleBack}
         className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full transition-colors active:scale-90 md:hidden"

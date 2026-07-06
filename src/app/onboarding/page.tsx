@@ -113,7 +113,7 @@ function OnboardingContent() {
   const steps = ["Profile", "Goals", "Experience", "Equipment", "Units"];
 
   return (
-    <div className="flex min-h-screen items-center justify-center px-4">
+    <div className="safe-top safe-bottom flex min-h-screen items-center justify-center px-4">
       <Card className="w-full max-w-lg">
         <CardHeader className="space-y-4 text-center">
           <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10">
@@ -278,7 +278,7 @@ function OnboardingContent() {
 export default function OnboardingPage() {
   return (
     <Suspense fallback={
-      <div className="flex min-h-screen items-center justify-center">
+      <div className="safe-top safe-bottom flex min-h-screen items-center justify-center">
         <p className="text-sm text-muted-foreground">Loading...</p>
       </div>
     }>

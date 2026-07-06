@@ -66,7 +66,7 @@ export function AppNav() {
       </aside>
 
       {/* Mobile bottom tab bar — primary navigation, native app pattern */}
-      <nav className="safe-bottom fixed bottom-0 left-0 right-0 z-40 flex items-stretch justify-around border-t bg-sidebar md:hidden">
+      <nav className="fixed bottom-0 left-0 right-0 z-40 flex items-stretch justify-around border-t bg-sidebar pb-[max(env(safe-area-inset-bottom),0px)] md:hidden">
         {navItems.map((item) => {
           const active = pathname === item.href || pathname.startsWith(item.href + "/");
           return (

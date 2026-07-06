@@ -243,7 +243,7 @@ export default function SessionPage() {
         </div>
       )}
       {/* Header with timer */}
-      <div className="safe-top sticky top-0 z-20 -mx-4 border-b bg-background/95 px-4 py-3 backdrop-blur md:static md:top-0 md:mx-0 md:rounded-lg md:border">
+      <div className="sticky top-0 z-20 -mx-4 border-b bg-background/95 px-4 py-3 pt-[max(env(safe-area-inset-top),0.75rem)] backdrop-blur md:static md:top-0 md:mx-0 md:rounded-lg md:border">
         <div className="flex items-center justify-between gap-4">
           <div className="flex items-center gap-3">
             <Button variant="ghost" size="icon" onClick={() => router.push(`/workouts/${params.id}`)}>
@@ -410,7 +410,7 @@ export default function SessionPage() {
       )}
 
       {/* Finish button */}
-      <div className="safe-bottom fixed inset-x-0 bottom-0 z-20 border-t bg-background/95 p-3 backdrop-blur md:static md:border-0 md:bg-transparent md:p-0">
+      <div className="fixed inset-x-0 bottom-0 z-20 border-t bg-background/95 p-3 pb-[max(env(safe-area-inset-bottom),0.75rem)] backdrop-blur md:static md:border-0 md:bg-transparent md:p-0">
         <Button className="w-full gap-2" size="lg" onClick={handleFinish} disabled={finishing}>
           <Trophy className="h-4 w-4" />
           {finishing ? "Finishing..." : "Finish Workout"}
